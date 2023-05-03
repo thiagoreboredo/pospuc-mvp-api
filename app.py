@@ -94,6 +94,31 @@ def add_tarefa(form: TarefaSchema):
         error_msg = "Não foi possível salvar novo item :/"
         return {"mesage": error_msg}, 400
 
+
+@app.put('/tarefa', tags=[tarefa_tag],
+            responses={"200": TarefaDelSchema, "404": ErrorSchema})
+def update_tarefa(query: TarefaBuscaSchema):
+    """Atualiza uma Tarefa para concluído a partir do título informado
+
+    Retorna uma mensagem de conclusão.
+    """
+    tarefa_titulo = unquote(unquote(query.titulo))
+    print(tarefa_titulo)
+    # criando conexão com a base
+    session = Session()
+    # fazendo a atualização
+    tarefa = session.query(Tarefa).filter(Tarefa.titulo == tarefa_titulo).first()
+    tarefa.concluido = True
+    session.commit()
+
+    if tarefa:
+        # retorna a representação da mensagem de confirmação
+        return {"mesage": "Tarefa concluída", "id": tarefa_titulo}
+    else:
+        # se a tarefa não foi encontrada
+        error_msg = "Tarefa não encontrada na base :/"
+        return {"mesage": error_msg}, 404
+
 @app.delete('/tarefa', tags=[tarefa_tag],
             responses={"200": TarefaDelSchema, "404": ErrorSchema})
 def del_tarefa(query: TarefaBuscaSchema):

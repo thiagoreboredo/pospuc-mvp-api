@@ -15,8 +15,7 @@ class Tarefa(Base):
     data_finalizacao = Column(DateTime, default=datetime.now())
 
     def __init__(self, titulo:str, descricao:int, concluido:bool,
-                 data_insercao:Union[DateTime, None] = None,
-                 data_finalizacao:Union[DateTime, None] = None):
+                 data_insercao:Union[DateTime, None] = None):
         """
         Cria um Tarefa
 
